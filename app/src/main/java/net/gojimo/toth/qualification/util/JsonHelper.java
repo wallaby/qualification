@@ -1,6 +1,5 @@
 package net.gojimo.toth.qualification.util;
 
-import android.graphics.Color;
 import android.util.Log;
 
 import net.gojimo.toth.qualification.model.Qualification;
