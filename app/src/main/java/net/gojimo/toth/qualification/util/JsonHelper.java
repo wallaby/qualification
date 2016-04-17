@@ -1,8 +1,10 @@
 package net.gojimo.toth.qualification.util;
 
+import android.graphics.Color;
 import android.util.Log;
 
 import net.gojimo.toth.qualification.model.Qualification;
+import net.gojimo.toth.qualification.model.Subject;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -61,7 +63,8 @@ public class JsonHelper {
   private static Qualification parseQualification(JSONObject qualificationJson) throws JSONException {
     String id = qualificationJson.getString("id");
     String name = qualificationJson.getString("name");
-    Qualification qualification = new Qualification(id, name);
+    List<Subject> subjects = parseSubjects(qualificationJson.getJSONArray("subjects"));
+    Qualification qualification = new Qualification(id, name, subjects);
     try {
       Date creationDate = dateFormat.parse(qualificationJson.getString("created_at"));
       qualification.setCreated(creationDate);
@@ -75,5 +78,32 @@ public class JsonHelper {
       Log.w(LOGGER_TAG, e.getMessage());
     }
     return qualification;
+  }
+
+  private static List<Subject> parseSubjects(JSONArray subjectsJson) throws JSONException{
+    List<Subject> subjects = new ArrayList<>();
+    for (int i = 0; i < subjectsJson.length(); i++) {
+      try {
+        JSONObject qualificationJson = subjectsJson.getJSONObject(i);
+        subjects.add(parseSubject(qualificationJson));
+      } catch (JSONException e) {
+        Log.w(LOGGER_TAG, e.getMessage());
+      }
+    }
+    return subjects;
+  }
+
+  private static Subject parseSubject(JSONObject subjectJson) throws JSONException {
+    String id = subjectJson.getString("id");
+    String title = subjectJson.getString("title");
+    Subject subject = new Subject(id, title);
+
+    try {
+      String colour = subjectJson.getString("colour");
+      subject.setColour(colour);
+    } catch (JSONException e) {
+      Log.w(LOGGER_TAG, e.getMessage());
+    }
+    return subject;
   }
 }

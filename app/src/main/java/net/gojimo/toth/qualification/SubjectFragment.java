@@ -1,7 +1,6 @@
 package net.gojimo.toth.qualification;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -12,11 +11,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import net.gojimo.toth.qualification.model.Qualification;
+import net.gojimo.toth.qualification.model.Subject;
 import net.gojimo.toth.qualification.util.GojimoServer;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,32 +22,28 @@ import java.util.List;
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class QualificationListFragment extends Fragment {
+public class SubjectFragment extends Fragment {
 
-  // TODO: Customize parameter argument names
+  private static final String ARG_QUALIFICATION_ID = "qualification-id";
   private static final String ARG_COLUMN_COUNT = "column-count";
-  private static final String LOGGER_TAG = "QualificationListFragment";
+  private static final String LOGGER_TAG = "SubjectFragment";
 
-  // TODO: Customize parameters
   private int columnCount = 1;
+  private String qualificationId;
   private OnListFragmentInteractionListener listener;
-  private final List<Qualification> qualifications = new ArrayList<>();
-  private RecyclerView.Adapter adapter;
-
 
   /**
    * Mandatory empty constructor for the fragment manager to instantiate the
    * fragment (e.g. upon screen orientation changes).
    */
-  public QualificationListFragment() {
+  public SubjectFragment() {
   }
 
-  // TODO: Customize parameter initialization
-  @SuppressWarnings("unused")
-  public static QualificationListFragment newInstance(int columnCount) {
-    QualificationListFragment fragment = new QualificationListFragment();
+  public static SubjectFragment newInstance(int columnCount, String qualificationId) {
+    SubjectFragment fragment = new SubjectFragment();
     Bundle args = new Bundle();
     args.putInt(ARG_COLUMN_COUNT, columnCount);
+    args.putString(ARG_QUALIFICATION_ID, qualificationId);
     fragment.setArguments(args);
     return fragment;
   }
@@ -58,21 +51,17 @@ public class QualificationListFragment extends Fragment {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setRetainInstance(true);
-    init();
+
     if (getArguments() != null) {
       columnCount = getArguments().getInt(ARG_COLUMN_COUNT);
+      qualificationId = getArguments().getString(ARG_QUALIFICATION_ID);
     }
-  }
-
-  private void init() {
-    new LoadQualifications().execute();
   }
 
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container,
                            Bundle savedInstanceState) {
-    View view = inflater.inflate(R.layout.qualification_list, container, false);
+    View view = inflater.inflate(R.layout.subject_list, container, false);
 
     // Set the adapter
     if (view instanceof RecyclerView) {
@@ -83,8 +72,9 @@ public class QualificationListFragment extends Fragment {
       } else {
         recyclerView.setLayoutManager(new GridLayoutManager(context, columnCount));
       }
-      adapter = new QualificationRecyclerViewAdapter(qualifications, listener);
-      recyclerView.setAdapter(adapter);
+      List<Subject> subjects = GojimoServer.getGojimoServer().getQualification(qualificationId).getSubjects();
+      Log.d(LOGGER_TAG, subjects.toString());
+      recyclerView.setAdapter(new SubjectRecyclerViewAdapter(subjects, listener));
     }
     return view;
   }
@@ -107,32 +97,17 @@ public class QualificationListFragment extends Fragment {
     listener = null;
   }
 
+  /**
+   * This interface must be implemented by activities that contain this
+   * fragment to allow an interaction in this fragment to be communicated
+   * to the activity and potentially other fragments contained in that
+   * activity.
+   * <p/>
+   * See the Android Training lesson <a href=
+   * "http://developer.android.com/training/basics/fragments/communicating.html"
+   * >Communicating with Other Fragments</a> for more information.
+   */
   public interface OnListFragmentInteractionListener {
-    void onListFragmentInteraction(Qualification item);
-  }
-
-  class LoadQualifications extends AsyncTask<Void, String, Boolean> {
-    @Override
-    protected Boolean doInBackground(Void... params) {
-      try {
-        GojimoServer server = GojimoServer.getGojimoServer();
-        qualifications.addAll(server.getQualifications());
-        return true;
-      } catch (IOException e) {
-        Log.e(LOGGER_TAG, e.getMessage());
-      }
-      return false;
-    }
-
-    @Override
-    protected void onPreExecute() {
-      super.onPreExecute();
-    }
-
-    @Override
-    protected void onPostExecute(Boolean result) {
-      super.onPostExecute(result);
-      adapter.notifyDataSetChanged();
-    }
+    void onListFragmentInteraction(Subject item);
   }
 }
