@@ -21,13 +21,15 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Pattern;
 
 /**
  * Parse model objects from JSON objects
  */
 public class JsonHelper {
   private static final String LOGGER_TAG = "Qualifications";
-  private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
+  private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
+  private static final Pattern COLOUR_PATTERN = Pattern.compile("^#[0-9a-fA-F]{6,6}$");
 
   private static String getString(InputStream stream) throws IOException {
     StringBuilder inputStringBuilder = new StringBuilder();
@@ -66,13 +68,13 @@ public class JsonHelper {
     List<Subject> subjects = parseSubjects(qualificationJson.getJSONArray("subjects"));
     Qualification qualification = new Qualification(id, name, subjects);
     try {
-      Date creationDate = dateFormat.parse(qualificationJson.getString("created_at"));
+      Date creationDate = DATE_FORMAT.parse(qualificationJson.getString("created_at"));
       qualification.setCreated(creationDate);
     } catch (ParseException | JSONException e) {
       Log.w(LOGGER_TAG, e.getMessage());
     }
     try {
-      Date updatedAt = dateFormat.parse(qualificationJson.getString("updated_at"));
+      Date updatedAt = DATE_FORMAT.parse(qualificationJson.getString("updated_at"));
       qualification.setUpdated(updatedAt);
     } catch (JSONException | ParseException e) {
       Log.w(LOGGER_TAG, e.getMessage());
@@ -100,7 +102,9 @@ public class JsonHelper {
 
     try {
       String colour = subjectJson.getString("colour");
-      subject.setColour(colour);
+      if (colour != null && COLOUR_PATTERN.matcher(colour).matches()) {
+        subject.setColour(colour);
+      }
     } catch (JSONException e) {
       Log.w(LOGGER_TAG, e.getMessage());
     }

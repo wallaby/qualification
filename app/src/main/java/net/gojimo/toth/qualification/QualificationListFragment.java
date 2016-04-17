@@ -27,11 +27,9 @@ import java.util.List;
  */
 public class QualificationListFragment extends Fragment {
 
-  // TODO: Customize parameter argument names
   private static final String ARG_COLUMN_COUNT = "column-count";
-  private static final String LOGGER_TAG = "QualificationListFragment";
+  private static final String LOGGER_TAG = "QualificationFragment";
 
-  // TODO: Customize parameters
   private int columnCount = 1;
   private OnListFragmentInteractionListener listener;
   private final List<Qualification> qualifications = new ArrayList<>();
@@ -45,8 +43,6 @@ public class QualificationListFragment extends Fragment {
   public QualificationListFragment() {
   }
 
-  // TODO: Customize parameter initialization
-  @SuppressWarnings("unused")
   public static QualificationListFragment newInstance(int columnCount) {
     QualificationListFragment fragment = new QualificationListFragment();
     Bundle args = new Bundle();

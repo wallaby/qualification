@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">Qualification</string>
-    <string name="no_subject_in_qualification_msg">There are no subjects belonging to this qualification.</string>
+    <string name="no_subject_in_qualification_msg">No subjects available for %1$s.</string>
 </resources>

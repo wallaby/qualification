@@ -6,6 +6,7 @@ import android.graphics.Color;
  * A subject
  */
 public class Subject {
+  private static final String DEFAULT_COLOUR = "#FFFFFF";
   private final String id;
   private final String title;
   private String colour;
@@ -13,6 +14,7 @@ public class Subject {
   public Subject(String id, String title) {
     this.id = id;
     this.title = title;
+    this.colour = DEFAULT_COLOUR;
   }
 
   public String getId() {

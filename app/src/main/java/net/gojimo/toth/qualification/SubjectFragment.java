@@ -1,7 +1,9 @@
 package net.gojimo.toth.qualification;
 
+import android.app.ActionBar;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -51,7 +53,6 @@ public class SubjectFragment extends Fragment {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-
     if (getArguments() != null) {
       columnCount = getArguments().getInt(ARG_COLUMN_COUNT);
       qualificationId = getArguments().getString(ARG_QUALIFICATION_ID);
@@ -73,7 +74,6 @@ public class SubjectFragment extends Fragment {
         recyclerView.setLayoutManager(new GridLayoutManager(context, columnCount));
       }
       List<Subject> subjects = GojimoServer.getGojimoServer().getQualification(qualificationId).getSubjects();
-      Log.d(LOGGER_TAG, subjects.toString());
       recyclerView.setAdapter(new SubjectRecyclerViewAdapter(subjects, listener));
     }
     return view;

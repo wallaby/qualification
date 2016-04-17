@@ -1,5 +1,7 @@
 package net.gojimo.toth.qualification;
 
+import android.graphics.Color;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +15,6 @@ import java.util.List;
 /**
  * {@link RecyclerView.Adapter} that can display a {@link Subject} and makes a call to the
  * specified {@link SubjectFragment.OnListFragmentInteractionListener}.
- * TODO: Replace the implementation with code for your data type.
  */
 public class SubjectRecyclerViewAdapter extends RecyclerView.Adapter<SubjectRecyclerViewAdapter.ViewHolder> {
 
@@ -36,6 +37,7 @@ public class SubjectRecyclerViewAdapter extends RecyclerView.Adapter<SubjectRecy
   public void onBindViewHolder(final ViewHolder holder, int position) {
     holder.item = values.get(position);
     holder.titleView.setText(values.get(position).getTitle());
+    holder.cardView.setCardBackgroundColor(Color.parseColor(values.get(position).getColour()));
 
     holder.view.setOnClickListener(new View.OnClickListener() {
       @Override
@@ -56,6 +58,7 @@ public class SubjectRecyclerViewAdapter extends RecyclerView.Adapter<SubjectRecy
 
   public class ViewHolder extends RecyclerView.ViewHolder {
     public final View view;
+    public final CardView cardView;
     public final TextView titleView;
     public Subject item;
 
@@ -63,6 +66,7 @@ public class SubjectRecyclerViewAdapter extends RecyclerView.Adapter<SubjectRecy
       super(view);
       this.view = view;
       titleView = (TextView) view.findViewById(R.id.subject_list_item_title);
+      cardView = (CardView) view.findViewById(R.id.subject_card_view);
     }
 
     @Override
