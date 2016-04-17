@@ -3,6 +3,8 @@ package net.gojimo.toth.qualification;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import net.gojimo.toth.qualification.model.Qualification;
 import net.gojimo.toth.qualification.model.Subject;
 import net.gojimo.toth.qualification.util.GojimoServer;
 
@@ -28,7 +31,7 @@ public class SubjectFragment extends Fragment {
   private static final String LOGGER_TAG = "SubjectFragment";
 
   private int columnCount = 1;
-  private String qualificationId;
+  private Qualification qualification;
   private OnListFragmentInteractionListener listener;
 
   /**
@@ -52,7 +55,8 @@ public class SubjectFragment extends Fragment {
     super.onCreate(savedInstanceState);
     if (getArguments() != null) {
       columnCount = getArguments().getInt(ARG_COLUMN_COUNT);
-      qualificationId = getArguments().getString(ARG_QUALIFICATION_ID);
+      //TODO: remove dependency on qualification list being loaded
+      qualification = GojimoServer.getGojimoServer().getQualification(getArguments().getString(ARG_QUALIFICATION_ID));
     }
   }
 
@@ -70,8 +74,12 @@ public class SubjectFragment extends Fragment {
       } else {
         recyclerView.setLayoutManager(new GridLayoutManager(context, columnCount));
       }
-      List<Subject> subjects = GojimoServer.getGojimoServer().getQualification(qualificationId).getSubjects();
+      List<Subject> subjects = qualification.getSubjects();
       recyclerView.setAdapter(new SubjectRecyclerViewAdapter(subjects, listener));
+    }
+    ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+    if (actionBar != null) {
+      actionBar.setTitle(String.format(getString(R.string.subject_list_title), qualification.getName()));
     }
     return view;
   }

@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -81,6 +83,10 @@ public class QualificationListFragment extends Fragment {
       }
       adapter = new QualificationRecyclerViewAdapter(qualifications, listener);
       recyclerView.setAdapter(adapter);
+    }
+    ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+    if (actionBar != null) {
+      actionBar.setTitle(R.string.qualification_list_title);
     }
     return view;
   }

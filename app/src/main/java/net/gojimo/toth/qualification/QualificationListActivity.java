@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.widget.Toast;
 
 import net.gojimo.toth.qualification.model.Qualification;
@@ -29,6 +30,10 @@ public class QualificationListActivity extends AppCompatActivity
       fm.beginTransaction()
           .add(R.id.activity_qualification_list, fragment)
           .commit();
+    }
+    Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+    if (toolbar != null) {
+      setSupportActionBar(toolbar);
     }
   }
 
